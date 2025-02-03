@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Booster</title>
+    {% load static %}
+    <link rel="icon" type="image/x-icon" href={% static 'favicon.png' %}>
+    <link rel="stylesheet" href={% static 'assets/css/main.css' %}>
+</head>
+<body>
+    <header class="header">
+        <div>
+            <span>TestBooster</span>
+        </div>
+        <nav>
+            <a href={% url 'index' %}>Главная</a>
+            <a href={% url 'index' %}>Тесты</a>
+            <a class="link-primary" href={% url 'index' %}>Войти</a>
+        </nav>
+    </header>
+    {% block content %}{% endblock content %}
+</body>
+</html>
