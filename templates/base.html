@@ -16,9 +16,19 @@
         <nav>
             <a href={% url 'index' %}>Главная</a>
             <a href={% url 'tests' %}>Тесты</a>
-            <a class="link-primary" href={% url 'index' %}>Войти</a>
+            <button class="auth-login">Войти</button>
         </nav>
     </header>
     {% block content %}{% endblock content %}
+
+    <script id="config" type="application/json">
+        {
+            "VK_APP_ID": "{{ VK_APP_ID }}",
+            "VK_REDIRECT_URL": "{{ VK_REDIRECT_URL }}"
+        }
+    </script>
+    <script src="https://unpkg.com/@vkid/sdk@2.4.1/dist-sdk/umd/index.js"></script>
+    <script src={% static '/assets/js/lib/jquery.js' %}></script>
+    <script src={% static 'assets/js/auth.js' %}></script>
 </body>
 </html>
