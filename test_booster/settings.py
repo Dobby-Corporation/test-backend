@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
+import os
 from dotenv import load_dotenv
 from pathlib import Path
 
@@ -23,8 +24,10 @@ load_dotenv(BASE_DIR / '.env')
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-&i#^*k=ms3g@l_c%6y)=+3nq43+!z=6k%abz&%pox=hms#e21('
 
+SECURE_CROSS_ORIGIN_OPENER_POLICY = None
+
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'True').lower() == 'true'
 
 ALLOWED_HOSTS = []
 
@@ -50,6 +53,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'users.middlewares.AuthMiddleware',
 ]
 
 ROOT_URLCONF = 'test_booster.urls'
@@ -73,7 +77,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'test_booster.context_processors.exvars',
+                'test_booster.context_processors.export_vars',
             ],
         },
     },

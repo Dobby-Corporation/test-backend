@@ -1,5 +1,6 @@
 from django.http import HttpRequest
 
+from .models import User
 from .services import verify_jwt
 
 class AuthMiddleware():
@@ -13,15 +14,14 @@ class AuthMiddleware():
         access_token = request.COOKIES.get('access_token', None)
 
         if isinstance(access_token, str) and len(access_token) > 0:
-
             try:
-                user_info = verify_jwt(access_token)
+                token_payload = verify_jwt(access_token)
+                user = User.objects.get(pk=token_payload.get('id'))
             except Exception:
-                user_info = None
+                user = None
 
-            if user_info:
-                request.authorized = True
-                request.user_id = user_info['id']
+            request.user_info = user
+            request.authorized = user is not None
 
         response = self.get_response(request)
         return response

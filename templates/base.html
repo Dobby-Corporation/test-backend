@@ -13,22 +13,15 @@
         <div>
             <span>TestBooster</span>
         </div>
-        <nav>
-            <a href={% url 'index' %}>Главная</a>
-            <a href={% url 'tests' %}>Тесты</a>
-            <button class="auth-login">Войти</button>
-        </nav>
+        <div>            
+            <script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-login="test_booster_bot" data-size="large" data-auth-url="/users/auth/telegram" data-request-access="write"></script>
+        </div>
     </header>
     {% block content %}{% endblock content %}
 
     <script id="config" type="application/json">
         {
-            "VK_APP_ID": "{{ VK_APP_ID }}",
-            "VK_REDIRECT_URL": "{{ VK_REDIRECT_URL }}"
         }
     </script>
-    <script src="https://unpkg.com/@vkid/sdk@2.4.1/dist-sdk/umd/index.js"></script>
-    <script src={% static '/assets/js/lib/jquery.js' %}></script>
-    <script src={% static 'assets/js/auth.js' %}></script>
 </body>
 </html>
