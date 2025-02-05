@@ -17,11 +17,15 @@
                             <td>Действия</td>
                         </tr>
                     </thead>
-                    {% for test in page_obj %}
-                        {# Each "contact" is a Contact model object. #}
-                        {{ test.name|upper }}<br>
-                        ...
-                    {% endfor %}
+                    <tbody>
+                        {% for test in page_obj %}
+                        <tr>
+                            <td>{{ test.id }}</td>
+                            <td>{{ test.name }}</td>
+                            <td>{{ test.description }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
                 </table>
             </div>
         </div>

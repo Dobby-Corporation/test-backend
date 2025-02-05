@@ -6,10 +6,11 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 
 from .forms import CreateTestForm
 from testings.models import Test
+from testings.services import make_version_from_json
 
 def index(request):
     test_list = Test.objects.all()
-    paginator = Paginator(test_list, 25) 
+    paginator = Paginator(test_list, 10) 
 
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
@@ -23,10 +24,16 @@ def create_test(request):
         if form.is_valid():
             name = form.cleaned_data['name']
             description = form.cleaned_data['description']
+            test = Test(name=name, description=description)
+            test.save()
+
             json_file: InMemoryUploadedFile = form.cleaned_data['json_file']
-            data = json_file.read().decode('utf-8')
+            json_data = json_file.read().decode('utf-8')
+            make_version_from_json(json_data, test)
+
+            # test_version.test = test
             
-            # return redirect("admin-panel.index")
+            return redirect("admin-panel.index")
     else:
         form = CreateTestForm()
 
