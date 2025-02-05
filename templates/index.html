@@ -1,22 +1,7 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test Booster</title>
-    {% load static %}
-    <link rel="icon" type="image/x-icon" href={% static 'favicon.png' %}>
-    <link rel="stylesheet" href={% static 'assets/css/main.css' %}>
-</head>
-<body>
-    <header class="header">
-        <div>
-            <span>TestBooster</span>
-        </div>
-        <div>            
-            <script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-login="test_booster_bot" data-size="large" data-auth-url="/users/auth/telegram" data-request-access="write"></script>
-        </div>
-    </header>
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
     <script src={% static '/assets/js/lib/jquery.js' %}></script>
-</body>
-</html>
+{% endblock content %}
