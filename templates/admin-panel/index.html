@@ -22,7 +22,12 @@
                         <tr>
                             <td>{{ test.id }}</td>
                             <td>{{ test.name }}</td>
-                            <td>{{ test.description }}</td>
+                            <td>
+                                <a href={% url 'admin-panel.edit-test' test.id %} role="button" class="btn btn-primary btn-sm">
+                                    Редактировать
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>

@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.core.files.uploadedfile import InMemoryUploadedFile
 
-from .forms import CreateTestForm, EditTestForm
+from .forms import CreateTestForm
 from testings.models import Test
 from testings.services import make_version_from_json
 
@@ -41,28 +41,25 @@ def create_test(request):
         "form": form
     })
 
-def edit_test(request, id: int):
-    test = Test.objects.get(pk=id)
+def create_test(request):
     if request.method == "POST":
-        form = EditTestForm(request.POST, request.FILES)
+        form = CreateTestForm(request.POST, request.FILES)
         if form.is_valid():
-            test.name = form.cleaned_data['name']
-            test.description = form.cleaned_data['description']
-
-            json_file: InMemoryUploadedFile = form.cleaned_data['json_file']
-            if json_file is not None:
-                json_data = json_file.read().decode('utf-8')
-                make_version_from_json(json_data, test)
-
+            name = form.cleaned_data['name']
+            description = form.cleaned_data['description']
+            test = Test(name=name, description=description)
             test.save()
 
+            json_file: InMemoryUploadedFile = form.cleaned_data['json_file']
+            json_data = json_file.read().decode('utf-8')
+            make_version_from_json(json_data, test)
+
+            # test_version.test = test
+            
             return redirect("admin-panel.index")
     else:
-        form = EditTestForm({
-            "name": test.name,
-            "description": test.description,
-        })
+        form = CreateTestForm()
 
-    return render(request, "admin-panel/edit-test.html", {
+    return render(request, "admin-panel/create-test.html", {
         "form": form
     })
