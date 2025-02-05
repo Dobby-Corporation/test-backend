@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'testings',
     'users',
+    'admin_panel',
 ]
 
 MIDDLEWARE = [
@@ -54,6 +55,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'users.middlewares.AuthMiddleware',
+    'admin_panel.middlewares.LoginMiddleware',
 ]
 
 ROOT_URLCONF = 'test_booster.urls'
