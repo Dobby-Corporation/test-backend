@@ -12,6 +12,7 @@
 
             <form method="POST" action="{% url 'tests.answer' test.id %}">
                 {% csrf_token %}
+                Program
                 <button type="submit" class="btn btn-primary">Отправить ответ</button>
             </form>
         </div>

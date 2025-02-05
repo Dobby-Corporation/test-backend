@@ -9,7 +9,7 @@ def make_version_from_dict(dict_data: dict, test: models.Test) -> models.TestVer
     for task in dict_data:
         match task['type']:
             case 'quiz':
-                models.QuizTask.objects.create(
+                quiz_task = models.QuizTask.objects.create(
                     description=task['description'],
                     task=models.Task.objects.create(
                         test_version=test_version,
@@ -17,6 +17,14 @@ def make_version_from_dict(dict_data: dict, test: models.Test) -> models.TestVer
                         type=task['type']
                     )
                 )
+
+                for choice in range(len(task['choices'])):
+                    models.QuizTaskChoice.objects.create(
+                        quiz_task=quiz_task,
+                        name=task['choices'][choice],
+                        is_correct=choice == task['answer']
+                    )
+                    
             case 'program':
                 program_task = models.ProgramTask.objects.create(
                     description=task['description'],

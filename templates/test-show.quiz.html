@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-3">
+    <div class="card">
+        <div class="card-body">
+            <div class="card-title mb-3">
+                <h4>{{ task.name }}</h4>
+            </div>
+            <p>{{ task_content.description }}</p>
+
+            <form method="POST" action="{% url 'tests.answer' test.id %}">
+                {% csrf_token %}
+
+                {% for choice in choices %}
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="choice" value="{{ choice.id }}">
+                        <label class="form-check-label" for="flexCheckDefault">
+                            {{ choice.name }}
+                        </label>
+                    </div>
+                {% endfor %}
+
+                <button type="submit" class="btn btn-primary mt-3">Отправить ответ</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

@@ -25,7 +25,7 @@
                         {% for test_result in test_results %}
                             <tr>
                                 <td>
-                                    {{ test_result.created_at|date:'d.m.Y H:i:s' }}
+                                    {{ test_result.started_at|date:'d.m.Y H:i:s' }}
                                 </td>
                                 <td>
                                     {{ test_result.score }}

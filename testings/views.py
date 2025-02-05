@@ -61,12 +61,23 @@ def show(request: HttpRequest, id: int):
     current_task = test_result.get_current_task()
     if current_task is None:
         return redirect('tests.finish', id=test.id)
-
-    return render(request, 'test.html', {
-        'test': test,
-        'task': current_task.task,
-        'task_content': current_task.task.get_specified_task(),
-    })
+    current_task = current_task.task
+    
+    match current_task.type:
+        case 'program':
+            return render(request, 'test-show.program.html', {
+                'test': test,
+                'task': current_task,
+                'task_content': current_task.get_program_task(),
+            })
+        case 'quiz':
+            print(current_task.get_quiz_task().get_choices())
+            return render(request, 'test-show.quiz.html', {
+                'test': test,
+                'task': current_task,
+                'task_content': current_task.get_quiz_task(),
+                'choices': current_task.get_quiz_task().get_choices(),
+            })
 
 @login_required
 def finish(request: HttpRequest, id: int):

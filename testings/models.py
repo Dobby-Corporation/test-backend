@@ -23,6 +23,7 @@ class Task(models.Model):
     test_version = models.ForeignKey(TestVersion, on_delete=models.CASCADE)
     type = models.CharField(max_length=20)
     name = models.CharField(max_length=60)
+    max_score = models.FloatField(default=1)
 
     def get_specified_task(self):
         match self.type:
@@ -43,6 +44,15 @@ class QuizTask(models.Model):
     description = models.CharField(max_length=500)
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
 
+    def get_choices(self):
+        return QuizTaskChoice.objects.filter(quiz_task=self).all()
+
+class QuizTaskChoice(models.Model):
+    """ Quiz choice model """
+    name = models.CharField(max_length=500)
+    quiz_task = models.ForeignKey(QuizTask, on_delete=models.CASCADE)
+    is_correct = models.BooleanField(default=False)
+
 class ProgramTask(models.Model):
     """ Program task model """
     description = models.CharField(max_length=1000)
@@ -60,7 +70,8 @@ class TestResult(models.Model):
     status = models.CharField(max_length=20, default='started')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     score = models.IntegerField()
-    created_at = models.DateTimeField(auto_now_add=True)
+    started_at = models.DateTimeField(auto_now_add=True)
+    completed_at = models.DateTimeField(auto_now_add=True)
 
     def has_available_task(self) -> bool:
         return TaskResult.objects.filter(test_result=self, available=True).count() > 0
@@ -73,5 +84,4 @@ class TaskResult(models.Model):
     test_result = models.ForeignKey(TestResult, on_delete=models.CASCADE)
     available = models.BooleanField(default=True)
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
-    score = models.IntegerField()
-    created_at = models.DateTimeField(auto_now_add=True)
+    score = models.FloatField(default=0)
