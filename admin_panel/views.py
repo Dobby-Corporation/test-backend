@@ -9,7 +9,7 @@ from testings.models import Test
 from testings.services import make_version_from_json
 
 def index(request):
-    test_list = Test.objects.all()
+    test_list = Test.objects.all().order_by('-id')
     paginator = Paginator(test_list, 10) 
 
     page_number = request.GET.get("page")
