@@ -5,6 +5,7 @@ from django.http import HttpRequest, HttpResponse
 
 from .models import Test, TestResult, TaskResult
 from .services import get_current_test_result
+from .services import get_test_results
 from users.decorators import login_required
 
 # Create your views here.
@@ -55,7 +56,7 @@ def show(request: HttpRequest, id: int):
     test_result = get_current_test_result(request.user_info, test)
     
     if test_result is None:
-        return redirect('tests.start', id=test.id)
+        return redirect('tests.info', id=test.id)
     
     current_task = test_result.get_current_task()
     if current_task is None:
@@ -73,10 +74,14 @@ def finish(request: HttpRequest, id: int):
     test_result = get_current_test_result(request.user_info, test)
     
     if test_result is None:
-        return redirect('tests.start', id=test.id)
+        return redirect('tests.info', id=test.id)
+
+    test_result.status = 'complete'
+    test_result.save()
     
     return render(request, 'test-finish.html')
 
+@login_required
 def answer(request: HttpRequest, id: int):
     test = Test.objects.get(id=id)
     test_result = get_current_test_result(request.user_info, test)
@@ -87,9 +92,25 @@ def answer(request: HttpRequest, id: int):
     current_task = test_result.get_current_task()
 
     if current_task is None:
-        return redirect('tests.finish', id=test.id)
+        return redirect('tests.info', id=test.id)
     
     current_task.available = False
     current_task.save()
     
+    current_task = test_result.get_current_task()
+    if current_task is None:
+        return redirect('tests.finish', id=test.id)
+
     return redirect('tests.show', id=id)
+
+@login_required
+def info(request: HttpRequest, id: int):
+    test = Test.objects.get(id=id)
+    cur_test_result = get_current_test_result(request.user_info, test)
+    test_results = get_test_results(request.user_info, test)
+
+    return render(request, 'test-info.html', {
+        'test': test,
+        'test_results': test_results,
+        'has_cur_test_result': cur_test_result is not None,
+    })

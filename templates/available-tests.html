@@ -23,8 +23,8 @@
                         <td>{{ test.id }}</td>
                         <td>{{ test.name }}</td>
                         <td>
-                            <a href={% url 'tests.start' test.id %} role="button" class="btn btn-primary btn-sm">
-                                Начать тестирование
+                            <a href={% url 'tests.info' test.id %} role="button" class="btn btn-primary btn-sm">
+                                Подробнее
                             </a>
                         </td>
                     </tr>

@@ -47,3 +47,6 @@ def get_current_test_result(user: User, test: models.Test):
 def get_latest_test_result(user: User, test: models.Test):
     query = models.TestResult.objects.filter(test_version__test=test, user=user, status='started')
     return query.order_by('-id').first()
+
+def get_test_results(user: User, test: models.Test):
+    return models.TestResult.objects.filter(user=user, test_version__test=test).order_by('-id').all()
