@@ -1,5 +1,6 @@
 import json
 
+from users.models import User
 from . import models
 
 def make_version_from_dict(dict_data: dict, test: models.Test) -> models.TestVersion:
@@ -12,7 +13,8 @@ def make_version_from_dict(dict_data: dict, test: models.Test) -> models.TestVer
                     description=task['description'],
                     task=models.Task.objects.create(
                         test_version=test_version,
-                        name=task['name']
+                        name=task['name'],
+                        type=task['type']
                     )
                 )
             case 'program':
@@ -20,7 +22,8 @@ def make_version_from_dict(dict_data: dict, test: models.Test) -> models.TestVer
                     description=task['description'],
                     task=models.Task.objects.create(
                         test_version=test_version,
-                        name=task['name']
+                        name=task['name'],
+                        type=task['type']
                     )
                 )
 
@@ -36,3 +39,6 @@ def make_version_from_dict(dict_data: dict, test: models.Test) -> models.TestVer
 
 def make_version_from_json(json_data: str, test: models.Test) -> models.TestVersion:
     return make_version_from_dict(json.loads(json_data), test)
+
+def get_current_test_result(user: User, test: models.Test):
+    return models.TestResult.objects.filter(test_version__test=test, user=user).first()
