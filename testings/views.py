@@ -51,4 +51,45 @@ def start(request: HttpRequest, id: int):
 
 @login_required
 def show(request: HttpRequest, id: int):
-    return render(request, 'test.html')
+    test = Test.objects.get(id=id)
+    test_result = get_current_test_result(request.user_info, test)
+    
+    if test_result is None:
+        return redirect('tests.start', id=test.id)
+    
+    current_task = test_result.get_current_task()
+    if current_task is None:
+        return redirect('tests.finish', id=test.id)
+
+    return render(request, 'test.html', {
+        'test': test,
+        'task': current_task.task,
+        'task_content': current_task.task.get_specified_task(),
+    })
+
+@login_required
+def finish(request: HttpRequest, id: int):
+    test = Test.objects.get(id=id)
+    test_result = get_current_test_result(request.user_info, test)
+    
+    if test_result is None:
+        return redirect('tests.start', id=test.id)
+    
+    return render(request, 'test-finish.html')
+
+def answer(request: HttpRequest, id: int):
+    test = Test.objects.get(id=id)
+    test_result = get_current_test_result(request.user_info, test)
+    
+    if test_result is None:
+        return redirect('tests.start', id=test.id)
+
+    current_task = test_result.get_current_task()
+
+    if current_task is None:
+        return redirect('tests.finish', id=test.id)
+    
+    current_task.available = False
+    current_task.save()
+    
+    return redirect('tests.show', id=id)

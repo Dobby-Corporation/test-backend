@@ -7,4 +7,6 @@ urlpatterns = [
     path('list', views.tests_list, name='tests.list'),
     path('<int:id>/start', views.start, name='tests.start'),
     path('<int:id>/show', views.show, name='tests.show'),
+    path('<int:id>/finish', views.finish, name='tests.finish'),
+    path('<int:id>/answer', views.answer, name='tests.answer'),
 ]

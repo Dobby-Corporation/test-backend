@@ -62,7 +62,7 @@ class TestResult(models.Model):
     score = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
 
-    def has_available_task(self):
+    def has_available_task(self) -> bool:
         return TaskResult.objects.filter(test_result=self, available=True).count() > 0
 
     def get_current_task(self):

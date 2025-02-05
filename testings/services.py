@@ -41,4 +41,9 @@ def make_version_from_json(json_data: str, test: models.Test) -> models.TestVers
     return make_version_from_dict(json.loads(json_data), test)
 
 def get_current_test_result(user: User, test: models.Test):
-    return models.TestResult.objects.filter(test_version__test=test, user=user).first()
+    query = models.TestResult.objects.filter(test_version__test=test, user=user, status='started')
+    return query.first()
+
+def get_latest_test_result(user: User, test: models.Test):
+    query = models.TestResult.objects.filter(test_version__test=test, user=user, status='started')
+    return query.order_by('-id').first()

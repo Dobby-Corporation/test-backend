@@ -6,8 +6,14 @@
     <div class="card">
         <div class="card-body">
             <div class="card-title mb-3">
-                <h4>Тесты</h4>
+                <h4>{{ task.name }}</h4>
             </div>
+            <p>{{ task_content.description }}</p>
+
+            <form method="POST" action="{% url 'tests.answer' test.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
         </div>
     </div>
 </div>
