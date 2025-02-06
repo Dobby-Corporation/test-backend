@@ -14,6 +14,7 @@ class Test(models.Model):
 class TestVersion(models.Model):
     """ Test version model """
     test = models.ForeignKey(Test, on_delete=models.CASCADE)
+    max_score = models.FloatField(default=1)
 
     def get_tasks(self):
         return Task.objects.filter(test_version=self).all()
@@ -58,6 +59,9 @@ class ProgramTask(models.Model):
     description = models.CharField(max_length=1000)
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
 
+    def get_test_cases(self):
+        return ProgramTaskTestCase.objects.filter(program_task=self).all()
+
 class ProgramTaskTestCase(models.Model):
     """ Program task test case model """
     program_task = models.ForeignKey(ProgramTask, on_delete=models.CASCADE)
@@ -69,7 +73,7 @@ class TestResult(models.Model):
     test_version = models.ForeignKey(TestVersion, on_delete=models.CASCADE)
     status = models.CharField(max_length=20, default='started')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    score = models.IntegerField()
+    score = models.FloatField(default=0)
     started_at = models.DateTimeField(auto_now_add=True)
     completed_at = models.DateTimeField(auto_now_add=True)
 

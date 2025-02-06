@@ -18,6 +18,8 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(BASE_DIR / '.env')
 
+MEDIA_ROOT = BASE_DIR / 'media'
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
@@ -81,6 +83,9 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'test_booster.context_processors.export_vars',
             ],
+            'libraries': {
+                'math_filters': 'test_booster.templatetags.math_filters',
+            },
         },
     },
 ]

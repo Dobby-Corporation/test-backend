@@ -10,9 +10,20 @@
             </div>
             <p>{{ task_content.description }}</p>
 
-            <form method="POST" action="{% url 'tests.answer' test.id %}">
+            <form method="POST" action="{% url 'tests.answer' test.id %}" enctype="multipart/form-data">
                 {% csrf_token %}
-                Program
+                <div class="mb-3">
+                    <label class="form-check-label" for="programText">
+                        Текст программы
+                    </label>
+                    <textarea rows="10" id="programText" class="form-control" type="" name="program_text"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-check-label" for="programFile">
+                        Файл программы
+                    </label>
+                    <input id="programFile" class="form-control" type="file" name="program_file" accept=".py">
+                </div>
                 <button type="submit" class="btn btn-primary">Отправить ответ</button>
             </form>
         </div>

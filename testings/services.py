@@ -1,12 +1,20 @@
+import datetime
 import json
+
+from pathlib import Path
+from subprocess import Popen, PIPE
+
+from django.conf import settings
 
 from users.models import User
 from . import models
 
 def make_version_from_dict(dict_data: dict, test: models.Test) -> models.TestVersion:
     test_version = models.TestVersion.objects.create(test=test)
+    test_version.max_score = 0
 
     for task in dict_data:
+        test_version.max_score += task.get('max_score', 1)
         match task['type']:
             case 'quiz':
                 quiz_task = models.QuizTask.objects.create(
@@ -42,6 +50,7 @@ def make_version_from_dict(dict_data: dict, test: models.Test) -> models.TestVer
                         output=test_case['output']
                     )
 
+    test_version.save()
     return test_version
 
 
@@ -58,3 +67,28 @@ def get_latest_test_result(user: User, test: models.Test):
 
 def get_test_results(user: User, test: models.Test):
     return models.TestResult.objects.filter(user=user, test_version__test=test).order_by('-id').all()
+
+def run(filepath: str, input_data: str) -> str:
+    p = Popen(['py', filepath], stdin=PIPE, stdout=PIPE, stderr=PIPE, text=True)
+    stdout_data = p.communicate(input_data)[0]
+    p.terminate()
+    return stdout_data.strip()
+
+def check_program(program: str, task: models.ProgramTask):
+    program_file_name = "program_{}.py".format(datetime.datetime.now().timestamp())
+    program_file_path: Path = settings.MEDIA_ROOT / program_file_name
+
+    program_file_path.parent.mkdir(parents=True, exist_ok=True)
+    program_file_path.write_text(program)
+
+    correct_cases = 0
+    total_cases = len(task.get_test_cases())
+
+    for test_case in task.get_test_cases():
+        input_data = test_case.input
+        output_data = test_case.output
+        
+        if run(program_file_path, input_data) == output_data:
+            correct_cases += 1
+
+    return correct_cases / total_cases
