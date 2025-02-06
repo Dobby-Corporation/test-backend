@@ -45,7 +45,7 @@
                                             Перейти к тестированию
                                         </a>
                                     {% else %}
-                                        <a href={% url 'tests.info' test.id %} role="button" class="btn btn-secondary btn-sm">
+                                        <a href={% url 'tests.result' test_result.id %} role="button" class="btn btn-secondary btn-sm">
                                             Посмотреть результаты
                                         </a>
                                     {% endif %}

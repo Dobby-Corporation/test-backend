@@ -29,10 +29,9 @@ def create_test(request):
 
             json_file: InMemoryUploadedFile = form.cleaned_data['json_file']
             json_data = json_file.read().decode('utf-8')
+
             make_version_from_json(json_data, test)
 
-            # test_version.test = test
-            
             return redirect("admin-panel.index")
     else:
         form = CreateTestForm()
@@ -52,6 +51,7 @@ def edit_test(request, id: int):
             json_file: InMemoryUploadedFile = form.cleaned_data['json_file']
             if json_file is not None:
                 json_data = json_file.read().decode('utf-8')
+
                 make_version_from_json(json_data, test)
 
             test.save()

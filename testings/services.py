@@ -6,6 +6,7 @@ from subprocess import Popen, PIPE
 
 from django.conf import settings
 
+from files.services import create_file_from_str
 from users.models import User
 from . import models
 
@@ -55,7 +56,10 @@ def make_version_from_dict(dict_data: dict, test: models.Test) -> models.TestVer
 
 
 def make_version_from_json(json_data: str, test: models.Test) -> models.TestVersion:
-    return make_version_from_dict(json.loads(json_data), test)
+    test_version = make_version_from_dict(json.loads(json_data), test)
+    test_version.config_file = create_file_from_str(json_data, 'config.json', 'application/json')
+    test_version.save()
+    return test_version
 
 def get_current_test_result(user: User, test: models.Test):
     query = models.TestResult.objects.filter(test_version__test=test, user=user, status='started')

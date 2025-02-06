@@ -5,7 +5,8 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_POST
 
-from .models import Test, TestResult, TaskResult, QuizTaskChoice
+from .models import Test, TestResult, TaskResult, QuizTaskChoice, ProgramTaskResult, QuizTaskResult
+from files.services import create_file_from_str
 from .services import get_current_test_result
 from .services import get_test_results
 from .services import check_program
@@ -117,6 +118,8 @@ def answer(request: HttpRequest, id: int):
         case 'quiz':
             choice = request.POST.get('choice')
             quiz_choice = QuizTaskChoice.objects.filter(quiz_task__task=current_task.task, id=choice).first()
+
+            current_task.quiz_task_result = QuizTaskResult.objects.create(choice=quiz_choice)
             
             if quiz_choice is None:
                 return redirect('tests.show', id=id)
@@ -131,7 +134,11 @@ def answer(request: HttpRequest, id: int):
                 program = file.read().decode('utf-8')
             else:
                 program = request.POST.get('program_text')
+            program_file = create_file_from_str(program, 'program.py', 'text/py')
+            current_task.program_task_result = ProgramTaskResult.objects.create(program_file=program_file)
             earned_score = check_program(program, current_task.task.get_program_task()) * current_task.task.max_score
+
+
 
     current_task.available = False
     current_task.score = earned_score
@@ -157,4 +164,12 @@ def info(request: HttpRequest, id: int):
         'test': test,
         'test_results': test_results,
         'has_cur_test_result': cur_test_result is not None,
+    })
+
+def result(request: HttpRequest, id: int):
+    test_result = TestResult.objects.get(id=id)
+    task_results = test_result.get_all_task_results()
+    return render(request, 'test-result.html', {
+        'test_result': test_result,
+        'task_results': task_results
     })

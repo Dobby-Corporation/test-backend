@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% load tests_entity_filters %}
+
+{% block content %}
+
+<div class="container mt-3">
+    <div class="mb-2">
+        <a class="btn btn-secondary" href="{% url 'tests.info' test_result.test_version.test.id %}">Вернуться назад</a>
+    </div>
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="card-title mb-3">
+                <h4>Результаты теста "{{ test_result.test_version.test.name }}"</h4>
+            </div>
+
+            <p>Вы набрали {{ test_result.score }} баллов из {{ test_result.test_version.max_score }} возможных</p>
+
+            <p>Ваши ответы:</p>
+        </div>
+    </div>
+    {% for task_result in task_results %}
+        <div class="card mb-2">
+            <div class="card-body">
+                <div class="card-title mb-3">
+                    <h5>Задание {{ forloop.counter }}: {{ task_result.score }} баллов из {{task_result.task.max_score}}</h5>
+                </div>
+
+                {% if task_result.task.type == 'quiz' %}
+                    <p>Вы выбрали: {{ task_result.quiz_task_result.choice.name }}</p>
+                    <p>Правильный ответ: {{ task_result.task|quiz_correct_choice|quiz_choice_name }}</p>
+                    {% for choice in task_result.task|quiz_choices %}
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="choice" value="{{ choice.id }}" disabled {% if choice == task_result.quiz_task_result.choice %}checked{%endif%}>
+                            <label class="form-check-label" for="flexCheckDefault">
+                                {{ choice.name }}
+                            </label>
+                        </div>
+                    {% endfor %}
+                {% elif task_result.task.type == 'program' %}
+                    Ваша программа:
+                    <a
+                        target="_blank"
+                        class="btn btn-secondary"
+                        href="{% url 'files.get' task_result.program_task_result.program_file.uuid %}"
+                    >ссылка</a>
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+    <div class="mt-2">
+        <a class="btn btn-secondary" href="{% url 'tests.info' test_result.test_version.test.id %}">Вернуться назад</a>
+    </div>
+</div>
+
+{% endblock content %}
