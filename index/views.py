@@ -1,8 +1,7 @@
-from django.template import loader
+from django.shortcuts import render
 from django.http import HttpRequest, HttpResponse
 
 # Create your views here.
-def index(_request: HttpRequest):
+def index(request: HttpRequest):
     """ Main page """
-    template = loader.get_template('index.html')
-    return HttpResponse(template.render())
+    return render(request, 'index.html')

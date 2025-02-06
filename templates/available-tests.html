@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<div class="container mt-3">
+    <div class="card">
+        <div class="card-body">
+            <div class="card-title mb-3">
+                <h4>Тесты</h4>
+            </div>
+            <table class="table mt-2">
+                <thead>
+                    <tr>
+                        <td>#</td>
+                        <td>Название</td>
+                        <td>Действия</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for test in tests %}
+                    <tr>
+                        <td>{{ test.id }}</td>
+                        <td>{{ test.name }}</td>
+                        <td>
+                            <a href={% url 'tests.info' test.id %} role="button" class="btn btn-primary btn-sm">
+                                Подробнее
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

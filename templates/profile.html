@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block header %}
+    <header class="header">
+        <div>
+            <span>TestBooster</span>
+        </div>
+    </header>
+{% endblock header %}
+
+{% block content %}
+    <main>
+        <h2>Профиль</h2>
+        <img src='{{ request.user_info.photo_url }}'>
+        <div>
+            <p>Имя: {{ request.user_info.first_name }} {{ request.user_info.last_name }}</p>
+            <p>Пользователь: {{ request.user_info.username }}</p>
+        </div>
+    </main>
+    <script src={% static '/assets/js/lib/jquery.js' %}></script>
+{% endblock content %}

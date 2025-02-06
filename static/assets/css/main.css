@@ -1,17 +1,17 @@
 body {
     margin: 0;
+    background: #ddd;
 }
 
 .header {
     box-sizing: border-box;
     height: 100px;
-    background: #333;
-    border-bottom: 2px solid #eee;
+    border-bottom: 1px solid #bbb;
+    background: white;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 0 50px;
-    color: white;
     font-family: Arial;
     font-size: 20pt;
 }
@@ -28,13 +28,18 @@ body {
     margin: 0 10px;
 }
 
-.header nav a.link-primary {
+.header nav .auth-login {
+    appearance: none;
+    text-decoration: none;
+    font-size: 15pt;
+    margin: 0 10px;
     background: #444;
     margin: 0;
     padding: 10px 20px;
     border-radius: 7px;
     border: 0 solid #0000;
     margin-left: 20px;
+    cursor: pointer;
 }
 
 .header nav a:hover {

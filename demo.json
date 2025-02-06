@@ -1,0 +1,38 @@
+[
+    {
+        "type": "quiz",
+        "name": "Арифметика",
+        "description": "Чему равно 2 + 2?",
+        "choices": [
+            "4",
+            "5",
+            "3",
+            "0"
+        ],
+        "answer": 0,
+        "max_score": 1
+    },
+    {
+        "type": "program",
+        "name": "Арифметика",
+        "description": "Даны два числа: A и B. Вывести A + B",
+        "testset": [
+            {
+                "input": "2 2",
+                "output": "4"
+            },
+            {
+                "input": "2 3",
+                "output": "5"
+            },
+            {
+                "input": "0 2",
+                "output": "2"
+            },
+            {
+                "input": "-2 2",
+                "output": "0"
+            }
+        ]
+    }
+]

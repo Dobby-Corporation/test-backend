@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-3">
+    <div class="card">
+        <div class="card-body">
+            <div class="card-title mb-3">
+                <h4>{{ test.name }}</h4>
+            </div>
+            <p>{{ test.description }}</p>
+            <a href={% url 'tests.start' test.id %} role="button" class="{% if has_cur_test_result %}disabled{%endif%} btn btn-primary btn-sm">
+                Начать тестирование
+            </a>
+            <div class="mt-4 mb-2">
+                <h5>Попытки</h5>
+            </div>
+            {% if test_results|length > 0%}
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Дата начала</th>
+                            <th scope="col">Дата окончания</th>
+                            <th scope="col">Баллы</th>
+                            <th scope="col">Действие</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for test_result in test_results %}
+                            <tr>
+                                <td>
+                                    {{ test_result.started_at|date:'d.m.Y H:i:s' }}
+                                </td>
+                                <td>
+                                    {{ test_result.completed_at|date:'d.m.Y H:i:s' }}
+                                </td>
+                                <td>
+                                    {% load math_filters %}
+                                    {{ test_result.score|floatformat:2 }} из {{ test_result.test_version.max_score }}
+                                    ({{ test_result.score|divide:test_result.test_version.max_score|multiply:100|floatformat:2 }}%)
+                                </td>
+                                <td>
+                                    {% if test_result.status == 'started' %}
+                                        <a href={% url 'tests.show' test.id %} role="button" class="btn btn-primary btn-sm">
+                                            Перейти к тестированию
+                                        </a>
+                                    {% else %}
+                                        <a href={% url 'tests.info' test.id %} role="button" class="btn btn-secondary btn-sm">
+                                            Посмотреть результаты
+                                        </a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

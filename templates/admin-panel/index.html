@@ -1,0 +1,64 @@
+{% extends 'admin-panel/base.html' %}
+{% block content %}
+    <div class="container mt-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="card-title mb-3">
+                    <h4>Тесты</h4>
+                </div>
+                <a href="{% url 'admin-panel.create-test' %}">
+                    <button type="button" class="btn btn-success">Добавить тест</button>
+                </a>
+                <table class="table mt-2">
+                    <thead>
+                        <tr>
+                            <td>#</td>
+                            <td>Название</td>
+                            <td>Действия</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for test in page_obj %}
+                        <tr>
+                            <td>{{ test.id }}</td>
+                            <td>{{ test.name }}</td>
+                            <td>
+                                <a href={% url 'admin-panel.edit-test' test.id %} role="button" class="btn btn-primary btn-sm">
+                                    Редактировать
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <nav aria-label="Навигация по страницам" class="mt-3">
+        <ul class="pagination justify-content-center">
+            <li class="page-item {% if not page_obj.has_previous %}disabled{% endif %}">
+                <a class="page-link" href="?page=1">&laquo;</a>
+            </li>
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+                </li>
+            {% endif %}
+
+            <li class="page-item active">
+                <a class="page-link" href="?page={{ page_obj.number }}">{{ page_obj.number }}</a>
+            </li>
+
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+                </li>
+            {% endif %}
+            <li class="page-item {% if not page_obj.has_next %}disabled{% endif %}">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">&raquo;</a>
+            </li>
+        </ul>
+    </nav>
+{% endblock content %}
