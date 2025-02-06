@@ -12,7 +12,7 @@
 
 {% block content %}
     <main>
-            <h2 class="d-flex justify-content-center">Профиль</h2>
+            <h2 class="d-flex justify-content-center mb-3">Профиль</h2>
         <div class="d-flex justify-content-center align-items-center">
             <div class="card" style="width: 18rem;">
                 {% if request.user_info.photo_url is not null %}
@@ -21,9 +21,11 @@
                 <img src="{% static 'anonym-user.png' %}" class="card-img-top zoom" alt="user photo">
                 {% endif %}
               <div class="card-body">
-                <h5 class="card-title">{{ request.user_info.first_name }} {{ request.user_info.last_name }}</h5>
+                <h5 class="card-title text-center">{{ request.user_info.first_name }} {{ request.user_info.last_name }}</h5>
                 <p class="card-text">Ссылка на ваш ТГ аккаунт: @{{ request.user_info.username }}</p>
-                <a href="{% url 'tests.list' %}" class="btn btn-primary">Приступить к тестам</a>
+                  <div class="d-flex justify-content-center">
+                    <a href="{% url 'tests.list' %}" class="btn btn-primary">Приступить к тестам</a>
+                  </div>
               </div>
             </div>
         </div>
@@ -34,7 +36,7 @@
                 $('.zoom').hover(
                     function() {
                         $(this).closest('.card').css('transition', 'transform 0.5s ease');
-                        $(this).closest('.card').css('transform', 'scale(1.1) translateY(10px)');
+                        $(this).closest('.card').css('transform', 'scale(1.1) translateY(20px)');
                     },
                     function() {
                         $(this).closest('.card').css('transition', 'transform 0.5s ease');
