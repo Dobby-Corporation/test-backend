@@ -85,9 +85,19 @@ class TestResult(models.Model):
     def get_current_task(self):
         return TaskResult.objects.filter(test_result=self, available=True).first()
 
+class QuizTaskResult(models.Model):
+    """ Quiz task result model """
+    choice = models.ForeignKey(QuizTaskChoice, on_delete=models.CASCADE, null=True)
+
+class ProgramTaskResult(models.Model):
+    """ Program task result model """
+    program_file = models.ForeignKey(File, on_delete=models.CASCADE, null=True)
+
 class TaskResult(models.Model):
     """ Test result model """
-    test_result = models.ForeignKey(TestResult, on_delete=models.CASCADE)
     available = models.BooleanField(default=True)
-    task = models.ForeignKey(Task, on_delete=models.CASCADE)
+    program_task_result = models.ForeignKey(ProgramTaskResult, on_delete=models.CASCADE, null=True)
+    quiz_task_result = models.ForeignKey(QuizTaskResult, on_delete=models.CASCADE, null=True)
     score = models.FloatField(default=0)
+    task = models.ForeignKey(Task, on_delete=models.CASCADE)
+    test_result = models.ForeignKey(TestResult, on_delete=models.CASCADE)
