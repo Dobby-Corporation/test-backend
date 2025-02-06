@@ -1,6 +1,9 @@
+import hashlib
+import hmac
 import jwt
 import os
 import requests
+import time
 
 def generate_jwt(payload):
     """ Generates jwt token using JWT_SECRET """
@@ -42,3 +45,27 @@ def account_get_profile_info(access_token):
     }
 
     return requests.get(url, params=params, timeout=5).json()
+
+def check_telegram_authorization(auth_data, bot_token):
+    check_hash = auth_data['hash']
+    
+    data_check_arr = []
+    for key, value in auth_data.items():
+        if key != 'hash':
+            data_check_arr.append(f"{key}={value}")
+    
+    data_check_arr.sort()
+    data_check_string = "\n".join(data_check_arr)
+
+    
+    secret_key = hashlib.sha256(bot_token.encode()).digest()
+    hash_value = hmac.new(secret_key, data_check_string.encode(), hashlib.sha256).hexdigest()
+    
+    
+    if hash_value != check_hash:
+        raise Exception('Data is NOT from Telegram')
+
+    if (time.time() - float(auth_data['auth_date'])) > 86400:
+        raise Exception('Data is outdated')
+    
+    return auth_data 
