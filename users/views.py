@@ -22,14 +22,13 @@ def auth_telegram(request: HttpRequest):
     try:
         user = User.objects.get(tg_id=request.GET['id'])
     except User.DoesNotExist:
-        user = User(
-            tg_id=request.GET.get('id'),
-            first_name=request.GET.get('first_name'),
-            last_name=request.GET.get('last_name'),
-            username=request.GET.get('username'),
-            photo_url=request.GET.get('photo_url'),
-        )
-        user.save()
+        user = User(tg_id=request.GET.get('id'))
+    
+    user.first_name=request.GET.get('first_name')
+    user.last_name=request.GET.get('last_name')
+    user.username=request.GET.get('username')
+    user.photo_url=request.GET.get('photo_url')
+    user.save()
 
     access_token = jwt.encode({
         'id': user.id,
