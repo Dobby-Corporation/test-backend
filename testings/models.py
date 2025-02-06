@@ -1,5 +1,6 @@
 from django.db import models
 
+from files.models import File
 from users.models import User
 
 # Create your models here.
@@ -15,6 +16,7 @@ class TestVersion(models.Model):
     """ Test version model """
     test = models.ForeignKey(Test, on_delete=models.CASCADE)
     max_score = models.FloatField(default=1)
+    config_file = models.ForeignKey(File, on_delete=models.CASCADE, null=True)
 
     def get_tasks(self):
         return Task.objects.filter(test_version=self).all()

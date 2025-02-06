@@ -3,9 +3,9 @@ import uuid
 from django.core.files.base import ContentFile
 from .models import File
 
-def create_file_from_str(content: str) -> File:
-    file = File(name='', file=None, type='', uuid=uuid.uuid4())
-    file.file.save('a.py', ContentFile(content, ''))
+def create_file_from_str(content: str, name='unknown', type='') -> File:
+    file = File(uuid=uuid.uuid4(), name=name, file=None, type=type)
+    file.file.save(name, ContentFile(content, name))
     file.save()
     return file
 
