@@ -24,4 +24,5 @@ urlpatterns = [
     path('panel/', include('admin_panel.urls')),
     path('tests/', include('testings.urls')),
     path('users/', include('users.urls')),
+    path('files/', include('files.urls')),
 ]
