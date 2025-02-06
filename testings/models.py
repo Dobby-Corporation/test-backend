@@ -84,6 +84,9 @@ class TestResult(models.Model):
 
     def get_current_task(self):
         return TaskResult.objects.filter(test_result=self, available=True).first()
+    
+    def get_all_task_results(self):
+        return TaskResult.objects.filter(test_result=self).all()
 
 class QuizTaskResult(models.Model):
     """ Quiz task result model """

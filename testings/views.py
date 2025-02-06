@@ -165,3 +165,11 @@ def info(request: HttpRequest, id: int):
         'test_results': test_results,
         'has_cur_test_result': cur_test_result is not None,
     })
+
+def result(request: HttpRequest, id: int):
+    test_result = TestResult.objects.get(id=id)
+    task_results = test_result.get_all_task_results()
+    return render(request, 'test-result.html', {
+        'test_result': test_result,
+        'task_results': task_results
+    })
