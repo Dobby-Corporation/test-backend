@@ -27,6 +27,10 @@
                                     Редактировать
                                     <i class="bi bi-pencil-square"></i>
                                 </a>
+                                <a href={% url 'admin-panel.test-results' test.id %} role="button" class="btn btn-success btn-sm">
+                                    Результаты
+                                    <i class="bi bi-eye"></i>
+                                </a>
                             </td>
                         </tr>
                         {% endfor %}

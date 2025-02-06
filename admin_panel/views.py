@@ -5,7 +5,7 @@ from django.http import HttpResponseRedirect
 from django.core.files.uploadedfile import InMemoryUploadedFile
 
 from .forms import CreateTestForm, EditTestForm
-from testings.models import Test
+from testings.models import Test, TestResult
 from testings.services import make_version_from_json
 
 def index(request):
@@ -65,4 +65,21 @@ def edit_test(request, id: int):
 
     return render(request, "admin-panel/edit-test.html", {
         "form": form
+    })
+
+def get_test_results(request, id):
+    test = Test.objects.get(pk=id)
+    test_results = TestResult.objects.filter(test_version__test=test, status='complete').order_by('-completed_at')
+    print(test_results)
+    paginator = Paginator(test_results, 10)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+    return render(request, "admin-panel/test-results.html", {"page_obj": page_obj})
+
+def get_test_result_details(request, id):
+    test_result = TestResult.objects.get(id=id)
+    task_results = test_result.get_all_task_results()
+    return render(request, 'admin-panel/test-result-details.html', {
+        'test_result': test_result,
+        'task_results': task_results
     })

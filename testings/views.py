@@ -166,6 +166,7 @@ def info(request: HttpRequest, id: int):
         'has_cur_test_result': cur_test_result is not None,
     })
 
+@login_required
 def result(request: HttpRequest, id: int):
     test_result = TestResult.objects.get(id=id)
     task_results = test_result.get_all_task_results()
