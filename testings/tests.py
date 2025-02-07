@@ -82,6 +82,49 @@ class QuizTaskModelTest(TestCase):
         self.assertIn(self.choice_1, choices)
         self.assertIn(self.choice_2, choices)
 
+class QuizTaskChoiceModelTest(TestCase):
+    def setUp(self):
+        self.test = Test.objects.create(name='Test 1', description='Test description')
+        self.test_version = TestVersion.objects.create(test=self.test, max_score=1)
+        self.task = Task.objects.create(test_version=self.test_version, type='quiz', name='Quiz Task', max_score=1)
+        self.quiz_task = QuizTask.objects.create(task=self.task, description='Quiz Task Description')
+        self.choice_1 = QuizTaskChoice.objects.create(quiz_task=self.quiz_task, name='Choice 1', is_correct=True)
+        self.choice_2 = QuizTaskChoice.objects.create(quiz_task=self.quiz_task, name='Choice 2', is_correct=False)
+
+    def tearDown(self):
+        self.test.delete()
+        self.test_version.delete()
+        self.task.delete()
+        self.quiz_task.delete()
+        self.choice_1.delete()
+        self.choice_2.delete()
+
+    def test_quiz_task_choice_creation(self):
+        self.assertEqual(self.choice_1.name, 'Choice 1')
+        self.assertTrue(self.choice_1.is_correct)
+        self.assertEqual(self.choice_1.quiz_task, self.quiz_task)
+
+        self.assertEqual(self.choice_2.name, 'Choice 2')
+        self.assertFalse(self.choice_2.is_correct)
+        self.assertEqual(self.choice_2.quiz_task, self.quiz_task)
+
+    def test_quiz_task_choices_linked_to_quiz_task(self):
+        choices = QuizTaskChoice.objects.filter(quiz_task=self.quiz_task)
+        self.assertEqual(choices.count(), 2)
+        self.assertIn(self.choice_1, choices)
+        self.assertIn(self.choice_2, choices)
+
+    def test_correct_and_incorrect_choices(self):
+        correct_choices = QuizTaskChoice.objects.filter(quiz_task=self.quiz_task, is_correct=True)
+        incorrect_choices = QuizTaskChoice.objects.filter(quiz_task=self.quiz_task, is_correct=False)
+
+        self.assertEqual(correct_choices.count(), 1)
+        self.assertEqual(correct_choices.first().name, 'Choice 1')
+
+        self.assertEqual(incorrect_choices.count(), 1)
+        self.assertEqual(incorrect_choices.first().name, 'Choice 2')
+
+
 class ProgramTaskModelTest(TestCase):
     def setUp(self):
         self.test = Test.objects.create(name='Test 1', description='Test description')
@@ -104,6 +147,8 @@ class ProgramTaskModelTest(TestCase):
         self.assertEqual(len(test_cases), 2)
         self.assertIn(self.test_case_1, test_cases)
         self.assertIn(self.test_case_2, test_cases)
+
+
 
 class TestResultModelTest(TestCase):
     def setUp(self):
