@@ -1,5 +1,5 @@
 from django.test import TestCase
-from .models import Test, TestVersion, Task, QuizTask, ProgramTask, QuizTaskChoice, ProgramTaskTestCase, TestResult, TaskResult
+from .models import Test, TestVersion, Task, QuizTask, ProgramTask, QuizTaskChoice, ProgramTaskTestCase, TestResult, TaskResult, QuizTaskResult
 from users.models import User
 
 class TestModelTest(TestCase):
@@ -235,3 +235,41 @@ class TestResultModelTest(TestCase):
         self.assertIn(self.task_result_1, tasks)
         self.assertIn(self.task_result_2, tasks)
         self.assertIn(self.task_result_3, tasks)
+
+class QuizTaskResultTests(TestCase):
+    def setUp(self):
+        self.test = Test.objects.create(name='Test 1', description='Test description')
+        self.test_version = TestVersion.objects.create(test=self.test, max_score=1)
+        self.task = Task.objects.create(test_version=self.test_version, type='quiz', name='Quiz Task', max_score=1)
+        self.quiz_task = QuizTask.objects.create(task=self.task, description='Quiz Task Description')
+        self.choice_1 = QuizTaskChoice.objects.create(quiz_task=self.quiz_task, name='Choice 1', is_correct=True)
+        self.choice_2 = QuizTaskChoice.objects.create(quiz_task=self.quiz_task, name='Choice 2', is_correct=False)
+        self.result_with_choice = QuizTaskResult.objects.create(choice=self.choice_1)
+        self.result_without_choice = QuizTaskResult.objects.create(choice=None)
+
+    def tearDown(self):
+        self.test.delete()
+        self.test_version.delete()
+        self.task.delete()
+        self.quiz_task.delete()
+        self.choice_1.delete()
+        self.choice_2.delete()
+        self.result_with_choice.delete()
+        self.result_without_choice.delete()
+
+    def test_quiz_task_result_creation_with_choice(self):
+        self.assertIsNotNone(self.result_with_choice.choice)
+        self.assertEqual(self.result_with_choice.choice.name, 'Choice 1')
+        self.assertTrue(self.result_with_choice.choice.is_correct)
+
+    def test_quiz_task_result_creation_without_choice(self):
+        self.assertIsNone(self.result_without_choice.choice)
+
+    def test_quiz_task_result_choice_link(self):
+        self.assertEqual(self.result_with_choice.choice, self.choice_1)
+
+    def test_quiz_task_result_invalid_choice(self):
+        result = QuizTaskResult.objects.create(choice=self.choice_2)
+        self.assertEqual(result.choice.name, 'Choice 2')
+        self.assertFalse(result.choice.is_correct)
+
