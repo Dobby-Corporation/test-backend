@@ -9,32 +9,18 @@
             <div class="card-title mb-3">
                 <h4>Тесты</h4>
             </div>
+                <div class="container">
                     {% for test in tests %}
-                      <div class="album py-5 bg-body-tertiary">
-                        <div class="container">
-                          <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-                            <div class="col">
-                              <div class="card shadow-sm">
-                                <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Это тест" preserveAspectRatio="xMidYMid slice" focusable="false">
-                                    <title>Placeholder</title>
-                                    <rect width="100%" height="100%" fill="#55595c"></rect>
-                                    <text x="25%" y="50%" fill="#eceeef" dy=".3em">Это как тест видит студент!</text>
-                                </svg>
-                                <div class="card-body">
-                                  <p class="card-text">{{ test.name }}</p>
-                                  <div class="d-flex justify-content-between align-items-center">
-                                    <div class="btn-group">
-                                      <a href={% url 'tests.info' test.id %} role="button" class="btn btn-sm btn-outline-secondary highlight-button">Подробнее</a>
-                                    </div>
-                                    <small class="text-body-secondary">ID: {{ test.id }}</small>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
+                    <div class="card text-bg-primary mb-3" style="max-width: 18rem;">
+                      <div class="card-header">Test</div>
+                      <div class="card-body">
+                        <h5 class="card-title">{{ test.name }}</h5>
+                        <p class="card-text">ID: {{ test.id }} </p>
+                          <a href="{% url 'tests.info' test.id %}" class="btn btn-primary border-dark">Подробнее</a>
                       </div>
+                    </div>
                     {% endfor %}
+                </div>
         </div>
     </div>
 </div>
@@ -47,6 +33,30 @@
             background-color: #0B5ED7;
             color: white;
         }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem; /* Добавьте отступы между контейнерами */
+        }
+
+        .card {
+            flex: 1 1 18rem; /* Разрешить контейнерам занимать до 18rem, но не меньше */
+        }
     </style>
+    <script>
+            $(document).ready(function() {
+                $('.zoom').hover(
+                    function() {
+                        $(this).closest('.card').css('transition', 'transform 0.5s ease');
+                        $(this).closest('.card').css('transform', 'scale(1.1) translateY(20px)');
+                    },
+                    function() {
+                        $(this).closest('.card').css('transition', 'transform 0.5s ease');
+                        $(this).closest('.card').css('transform', 'scale(1) translateY(0)');
+                    }
+                );
+            });
+    </script>
 
 {% endblock content %}
