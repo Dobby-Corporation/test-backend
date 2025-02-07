@@ -1,5 +1,5 @@
 from django.test import TestCase
-from .models import Test, TestVersion, Task, QuizTask, ProgramTask, QuizTaskChoice
+from .models import Test, TestVersion, Task, QuizTask, ProgramTask, QuizTaskChoice, ProgramTaskTestCase
 
 
 class TestModelTest(TestCase):
@@ -81,3 +81,26 @@ class QuizTaskModelTest(TestCase):
         self.assertEqual(len(choices), 2)
         self.assertIn(self.choice_1, choices)
         self.assertIn(self.choice_2, choices)
+
+class ProgramTaskModelTest(TestCase):
+    def setUp(self):
+        self.test = Test.objects.create(name='Test 1', description='Test description')
+        self.test_version = TestVersion.objects.create(test=self.test, max_score=1)
+        self.task = Task.objects.create(test_version=self.test_version, type='program', name='Program Task', max_score=1)
+        self.program_task = ProgramTask.objects.create(task=self.task, description='Program Task Description')
+        self.test_case_1 = ProgramTaskTestCase.objects.create(program_task=self.program_task, input='Input 1', output='Output 1')
+        self.test_case_2 = ProgramTaskTestCase.objects.create(program_task=self.program_task, input='Input 2', output='Output 2')
+
+    def tearDown(self):
+        self.test.delete()
+        self.test_version.delete()
+        self.task.delete()
+        self.program_task.delete()
+        self.test_case_1.delete()
+        self.test_case_2.delete()
+
+    def test_get_test_cases(self):
+        test_cases = self.program_task.get_test_cases()
+        self.assertEqual(len(test_cases), 2)
+        self.assertIn(self.test_case_1, test_cases)
+        self.assertIn(self.test_case_2, test_cases)
