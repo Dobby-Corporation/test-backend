@@ -15,7 +15,6 @@ def login(request: HttpRequest):
     return render(request, 'login.html')
 
 def profile(request: HttpRequest):
-    print(request.user_info)
     return render(request, 'profile.html')
 
 def auth_telegram(request: HttpRequest):
