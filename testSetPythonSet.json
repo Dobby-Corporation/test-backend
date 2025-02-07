@@ -1,0 +1,51 @@
+[
+    {
+        "type": "quiz",
+        "name": "Sets",
+        "description": "Что выведет код: print(len(set(\"hello\")))?",
+        "choices": [
+            "5",
+            "4",
+            "6",
+            "0"
+        ],
+        "answer": 1,
+        "max_score": 1
+    },
+    {
+        "type": "quiz",
+        "name": "Sets",
+        "description": "Что выведет код: print(str(set(\"ppp\"))=='p')?",
+        "choices": [
+            "True",
+            "False",
+            "Ошибку"
+        ],
+        "answer": 1,
+        "max_score": 1
+    },
+    {
+        "type": "quiz",
+        "name": "Sets",
+        "description": "Что выведет код: print(frozenset([1,2,3])=={1,2,3})?",
+        "choices": [
+            "True",
+            "False",
+            "Ошибку"
+        ],
+        "answer": 0,
+        "max_score": 1
+    },
+    {
+        "type": "quiz",
+        "name": "Sets",
+        "description": "Что выведет код: print(type({}) == type({1}))?",
+        "choices": [
+            "True",
+            "False",
+            "Ошибку"
+        ],
+        "answer": 1,
+        "max_score": 1
+    }
+]
