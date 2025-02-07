@@ -45,7 +45,7 @@
                                             Перейти к тестированию
                                         </a>
                                     {% else %}
-                                        <a href={% url 'tests.result' test_result.id %} role="button" class="btn btn-secondary btn-sm">
+                                        <a href={% url 'tests.result' test_result.id %} role="button" class="btn btn-secondary highlight-button btn-sm border-secondary">
                                             Посмотреть результаты
                                         </a>
                                     {% endif %}
@@ -58,5 +58,15 @@
         </div>
     </div>
 </div>
+<style>
+        .highlight-button {
+            background-color: #0D6EFD;
+            color: white;
+        }
+        .highlight-button:hover {
+            background-color: #0B5ED7;
+            color: white;
+        }
+</style>
 
 {% endblock content %}

@@ -6,7 +6,7 @@
 
 <div class="container mt-3">
     <div class="mb-2">
-        <a class="btn btn-secondary" href="{% url 'tests.info' test_result.test_version.test.id %}">Вернуться назад</a>
+        <a class="btn btn-secondary highlight-button border-secondary" href="{% url 'tests.info' test_result.test_version.test.id %}">Вернуться назад</a>
     </div>
     <div class="card mb-4">
         <div class="card-body">
@@ -41,7 +41,7 @@
                     Ваша программа:
                     <a
                         target="_blank"
-                        class="btn btn-secondary"
+                        class="btn btn-secondary highlight-button border-secondary"
                         href="{% url 'files.get' task_result.program_task_result.program_file.uuid %}"
                     >ссылка</a>
                 {% endif %}
@@ -49,8 +49,18 @@
         </div>
     {% endfor %}
     <div class="mt-2">
-        <a class="btn btn-secondary" href="{% url 'tests.info' test_result.test_version.test.id %}">Вернуться назад</a>
+        <a class="btn btn-secondary highlight-button border-secondary" href="{% url 'tests.info' test_result.test_version.test.id %}">Вернуться назад</a>
     </div>
 </div>
+<style>
+        .highlight-button {
+            background-color: #0D6EFD;
+            color: white;
+        }
+        .highlight-button:hover {
+            background-color: #0B5ED7;
+            color: white;
+        }
+</style>
 
 {% endblock content %}

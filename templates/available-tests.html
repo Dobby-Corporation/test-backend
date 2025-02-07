@@ -16,7 +16,7 @@
                       <div class="card-body">
                         <h5 class="card-title">{{ test.name }}</h5>
                         <p class="card-text">ID: {{ test.id }} </p>
-                          <a href="{% url 'tests.info' test.id %}" class="btn btn-primary border-dark">Подробнее</a>
+                          <a href="{% url 'tests.info' test.id %}" class="btn btn-primary highlight-button border-secondary">Подробнее</a>
                       </div>
                     </div>
                     {% endfor %}
@@ -32,6 +32,7 @@
         .highlight-button:hover {
             background-color: #0B5ED7;
             color: white;
+            border: none;
         }
 
         .container {
