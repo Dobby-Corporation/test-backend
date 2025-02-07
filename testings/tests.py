@@ -148,6 +148,44 @@ class ProgramTaskModelTest(TestCase):
         self.assertIn(self.test_case_1, test_cases)
         self.assertIn(self.test_case_2, test_cases)
 
+class ProgramTaskTestCaseModelTest(TestCase):
+    def setUp(self):
+        self.test = Test.objects.create(name='Test 1', description='Test description')
+        self.test_version = TestVersion.objects.create(test=self.test, max_score=1)
+        self.task = Task.objects.create(test_version=self.test_version, type='program', name='Program Task', max_score=1)
+        self.program_task = ProgramTask.objects.create(task=self.task, description='Program Task Description')
+        self.test_case_1 = ProgramTaskTestCase.objects.create(program_task=self.program_task, input='5 10', output='15')
+        self.test_case_2 = ProgramTaskTestCase.objects.create(program_task=self.program_task, input='20 30', output='50')
+
+    def tearDown(self):
+        self.test.delete()
+        self.test_version.delete()
+        self.task.delete()
+        self.program_task.delete()
+        self.test_case_1.delete()
+        self.test_case_2.delete()
+
+    def test_program_task_test_case_creation(self):
+        self.assertEqual(self.test_case_1.input, "5 10")
+        self.assertEqual(self.test_case_1.output, "15")
+        self.assertEqual(self.test_case_1.program_task, self.program_task)
+
+        self.assertEqual(self.test_case_2.input, "20 30")
+        self.assertEqual(self.test_case_2.output, "50")
+        self.assertEqual(self.test_case_2.program_task, self.program_task)
+
+    def test_program_task_test_cases_linked_to_task(self):
+        test_cases = ProgramTaskTestCase.objects.filter(program_task=self.program_task)
+        self.assertEqual(test_cases.count(), 2)
+        self.assertIn(self.test_case_1, test_cases)
+        self.assertIn(self.test_case_2, test_cases)
+
+    def test_input_output_values(self):
+        test_case = ProgramTaskTestCase.objects.get(input="5 10")
+        self.assertEqual(test_case.output, "15")
+
+        test_case = ProgramTaskTestCase.objects.get(input="20 30")
+        self.assertEqual(test_case.output, "50")
 
 
 class TestResultModelTest(TestCase):
