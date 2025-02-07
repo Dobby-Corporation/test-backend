@@ -70,7 +70,6 @@ def edit_test(request, id: int):
 def get_test_results(request, id):
     test = Test.objects.get(pk=id)
     test_results = TestResult.objects.filter(test_version__test=test, status='complete').order_by('-completed_at')
-    print(test_results)
     paginator = Paginator(test_results, 10)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
