@@ -1,6 +1,6 @@
 from django.test import TestCase
-from .models import Test, TestVersion, Task, QuizTask, ProgramTask, QuizTaskChoice, ProgramTaskTestCase
-
+from .models import Test, TestVersion, Task, QuizTask, ProgramTask, QuizTaskChoice, ProgramTaskTestCase, TestResult, TaskResult
+from users.models import User
 
 class TestModelTest(TestCase):
     def setUp(self):
@@ -104,3 +104,51 @@ class ProgramTaskModelTest(TestCase):
         self.assertEqual(len(test_cases), 2)
         self.assertIn(self.test_case_1, test_cases)
         self.assertIn(self.test_case_2, test_cases)
+
+class TestResultModelTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create(tg_id = '123', username='testuser', first_name='Oleg', last_name='Popov')
+        self.test = Test.objects.create(name='Test 1', description='Test description')
+        self.test_version = TestVersion.objects.create(test=self.test, max_score=1)
+        self.task = Task.objects.create(test_version=self.test_version, type='quiz', name='Quiz Task', max_score=1)
+        self.test_result = TestResult.objects.create(test_version=self.test_version, user=self.user, status='started', score=0)
+        self.task_result_1 = TaskResult.objects.create(task=self.task, test_result=self.test_result, available=True, )
+        self.task_result_2 = TaskResult.objects.create(task=self.task, test_result=self.test_result, available=False)
+        self.task_result_3 = TaskResult.objects.create(task=self.task, test_result=self.test_result, available=True)
+
+    def tearDown(self):
+        self.user.delete()
+        self.test.delete()
+        self.test_version.delete()
+        self.task.delete()
+        self.test_result.delete()
+        self.task_result_1.delete()
+        self.task_result_2.delete()
+        self.task_result_3.delete()
+
+    def test_has_available_task(self):
+        self.assertTrue(self.test_result.has_available_task())
+
+        self.task_result_1.available = False
+        self.task_result_1.save()
+        self.task_result_3.available = False
+        self.task_result_3.save()
+
+        self.assertFalse(self.test_result.has_available_task())
+    
+    def test_get_current_task(self):
+        current_task = self.test_result.get_current_task()
+        self.assertIsNotNone(current_task)
+        self.assertEqual(current_task, self.task_result_1)
+
+        self.task_result_1.available = False
+        self.task_result_1.save()
+        current_task = self.test_result.get_current_task()
+        self.assertEqual(current_task, self.task_result_3)
+
+    def test_get_all_task_results(self):
+        tasks = self.test_result.get_all_task_results()
+        self.assertEqual(len(tasks), 3)
+        self.assertIn(self.task_result_1, tasks)
+        self.assertIn(self.task_result_2, tasks)
+        self.assertIn(self.task_result_3, tasks)
