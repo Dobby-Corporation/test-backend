@@ -6,8 +6,8 @@ from users.models import User
 # Create your models here.
 class Test(models.Model):
     """ Test model """
-    name = models.CharField(max_length=60)
-    description = models.CharField(max_length=60)
+    name = models.CharField(max_length=120)
+    description = models.CharField(max_length=600)
 
     def get_latest_version(self) -> 'TestVersion':
         return TestVersion.objects.filter(test=self).order_by('-id').first()
