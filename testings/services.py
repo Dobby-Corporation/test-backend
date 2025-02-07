@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 from subprocess import Popen, PIPE
 
+from django.db.models.fields.files import FieldFile
 from django.conf import settings
 
 from files.services import create_file_from_str
@@ -73,18 +74,12 @@ def get_test_results(user: User, test: models.Test):
     return models.TestResult.objects.filter(user=user, test_version__test=test).order_by('-id').all()
 
 def run(filepath: str, input_data: str) -> str:
-    p = Popen(['py', filepath], stdin=PIPE, stdout=PIPE, stderr=PIPE, text=True)
+    p = Popen(['python3', filepath], stdin=PIPE, stdout=PIPE, stderr=PIPE, text=True)
     stdout_data = p.communicate(input_data)[0]
     p.terminate()
     return stdout_data.strip()
 
-def check_program(program: str, task: models.ProgramTask):
-    program_file_name = "program_{}.py".format(datetime.datetime.now().timestamp())
-    program_file_path: Path = settings.MEDIA_ROOT / program_file_name
-
-    program_file_path.parent.mkdir(parents=True, exist_ok=True)
-    program_file_path.write_text(program)
-
+def check_program(program_file: FieldFile, task: models.ProgramTask):
     correct_cases = 0
     total_cases = len(task.get_test_cases())
 
@@ -92,7 +87,7 @@ def check_program(program: str, task: models.ProgramTask):
         input_data = test_case.input
         output_data = test_case.output
         
-        if run(program_file_path, input_data) == output_data:
+        if run(program_file.path, input_data) == output_data:
             correct_cases += 1
 
     return correct_cases / total_cases

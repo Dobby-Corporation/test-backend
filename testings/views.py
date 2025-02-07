@@ -34,7 +34,6 @@ def start(request: HttpRequest, id: int):
     test_result = get_current_test_result(request.user_info, test)
 
     if test_result is None:
-        print("Creating")
         test_result = TestResult.objects.create(
             test_version=version,
             status='started',
@@ -75,7 +74,6 @@ def show(request: HttpRequest, id: int):
                 'task_content': current_task.get_program_task(),
             })
         case 'quiz':
-            print(current_task.get_quiz_task().get_choices())
             return render(request, 'test-show.quiz.html', {
                 'test': test,
                 'task': current_task,
@@ -136,7 +134,7 @@ def answer(request: HttpRequest, id: int):
                 program = request.POST.get('program_text')
             program_file = create_file_from_str(program, 'program.py', 'text/py')
             current_task.program_task_result = ProgramTaskResult.objects.create(program_file=program_file)
-            earned_score = check_program(program, current_task.task.get_program_task()) * current_task.task.max_score
+            earned_score = check_program(program_file.file, current_task.task.get_program_task()) * current_task.task.max_score
 
 
 
