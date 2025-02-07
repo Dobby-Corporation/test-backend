@@ -1,5 +1,5 @@
 from django.test import TestCase
-from .models import Test, TestVersion, Task, QuizTask, ProgramTask
+from .models import Test, TestVersion, Task, QuizTask, ProgramTask, QuizTaskChoice
 
 
 class TestModelTest(TestCase):
@@ -42,8 +42,8 @@ class TaskModelTest(TestCase):
         self.test_version = TestVersion.objects.create(test=self.test, max_score=1)
         self.task_quiz = Task.objects.create(test_version=self.test_version, type='quiz', name='Quiz Task', max_score=1)
         self.task_program = Task.objects.create(test_version=self.test_version, type='program', name='Program Task', max_score=1)
-        self.quiz_task = QuizTask.objects.create(task=self.task_quiz)
-        self.program_task = ProgramTask.objects.create(task=self.task_program)
+        self.quiz_task = QuizTask.objects.create(task=self.task_quiz, description='Quiz Task Description')
+        self.program_task = ProgramTask.objects.create(task=self.task_program, description='Program Task Description')
 
     def tearDown(self):
         self.test.delete()
@@ -59,3 +59,25 @@ class TaskModelTest(TestCase):
         self.assertEqual(quiz_task, self.quiz_task)
         self.assertEqual(program_task, self.program_task)
 
+class QuizTaskModelTest(TestCase):
+    def setUp(self):
+        self.test = Test.objects.create(name='Test 1', description='Test description')
+        self.test_version = TestVersion.objects.create(test=self.test, max_score=1)
+        self.task = Task.objects.create(test_version=self.test_version, type='quiz', name='Quiz Task', max_score=1)
+        self.quiz_task = QuizTask.objects.create(task=self.task, description='Quiz Task Description')
+        self.choice_1 = QuizTaskChoice.objects.create(quiz_task=self.quiz_task, name='Choice 1')
+        self.choice_2 = QuizTaskChoice.objects.create(quiz_task=self.quiz_task, name='Choice 2')
+
+    def tearDown(self):
+        self.test.delete()
+        self.test_version.delete()
+        self.task.delete()
+        self.quiz_task.delete()
+        self.choice_1.delete()
+        self.choice_2.delete()
+
+    def test_get_choices(self):
+        choices = self.quiz_task.get_choices()
+        self.assertEqual(len(choices), 2)
+        self.assertIn(self.choice_1, choices)
+        self.assertIn(self.choice_2, choices)
