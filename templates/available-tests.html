@@ -9,30 +9,55 @@
             <div class="card-title mb-3">
                 <h4>Тесты</h4>
             </div>
-            <table class="table mt-2">
-                <thead>
-                    <tr>
-                        <td>#</td>
-                        <td>Название</td>
-                        <td>Действия</td>
-                    </tr>
-                </thead>
-                <tbody>
+                <div class="container">
                     {% for test in tests %}
-                    <tr>
-                        <td>{{ test.id }}</td>
-                        <td>{{ test.name }}</td>
-                        <td>
-                            <a href={% url 'tests.info' test.id %} role="button" class="btn btn-primary btn-sm">
-                                Подробнее
-                            </a>
-                        </td>
-                    </tr>
+                    <div class="card text-bg-primary mb-3" style="max-width: 18rem;">
+                      <div class="card-header">Test</div>
+                      <div class="card-body">
+                        <h5 class="card-title">{{ test.name }}</h5>
+                        <p class="card-text">ID: {{ test.id }} </p>
+                          <a href="{% url 'tests.info' test.id %}" class="btn btn-primary highlight-button border-secondary">Подробнее</a>
+                      </div>
+                    </div>
                     {% endfor %}
-                </tbody>
-            </table>
+                </div>
         </div>
     </div>
 </div>
+    <style>
+        .highlight-button {
+            background-color: #0D6EFD;
+            color: white;
+        }
+        .highlight-button:hover {
+            background-color: #0B5ED7;
+            color: white;
+            border: none;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem; /* Добавьте отступы между контейнерами */
+        }
+
+        .card {
+            flex: 1 1 18rem; /* Разрешить контейнерам занимать до 18rem, но не меньше */
+        }
+    </style>
+    <script>
+            $(document).ready(function() {
+                $('.zoom').hover(
+                    function() {
+                        $(this).closest('.card').css('transition', 'transform 0.5s ease');
+                        $(this).closest('.card').css('transform', 'scale(1.1) translateY(20px)');
+                    },
+                    function() {
+                        $(this).closest('.card').css('transition', 'transform 0.5s ease');
+                        $(this).closest('.card').css('transform', 'scale(1) translateY(0)');
+                    }
+                );
+            });
+    </script>
 
 {% endblock content %}

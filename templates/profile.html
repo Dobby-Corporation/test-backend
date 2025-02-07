@@ -12,17 +12,37 @@
 
 {% block content %}
     <main>
-        <h2>Профиль</h2>
-        {% if request.user_info.photo_url is not null %}
-            <img src="{{ request.user_info.photo_url }}">
-        {% else %}
-            <img src="{% static "anonym-user.png" %}">
-        {% endif %}
-        <div>
-            <p>Имя: {{ request.user_info.first_name }} {{ request.user_info.last_name }}</p>
-            <p>Пользователь: {{ request.user_info.username }}</p>
+            <h2 class="d-flex justify-content-center mb-3">Профиль</h2>
+        <div class="d-flex justify-content-center align-items-center">
+            <div class="card" style="width: 18rem;">
+                {% if request.user_info.photo_url is not null %}
+              <img src="{{ request.user_info.photo_url }}" class="card-img-top zoom" alt="user photo">
+                {% else %}
+                <img src="{% static 'anonym-user.png' %}" class="card-img-top zoom" alt="user photo">
+                {% endif %}
+              <div class="card-body">
+                <h5 class="card-title text-center">{{ request.user_info.first_name }} {{ request.user_info.last_name }}</h5>
+                <p class="card-text">Ссылка на ваш ТГ аккаунт: @{{ request.user_info.username }}</p>
+                  <div class="d-flex justify-content-center">
+                    <a href="{% url 'tests.list' %}" class="btn btn-primary">Приступить к тестам</a>
+                  </div>
+              </div>
+            </div>
         </div>
-        <a role="button" class="btn btn-primary" href="{% url 'tests.list' %}">Тесты</a>
     </main>
     <script src={% static '/assets/js/lib/jquery.js' %}></script>
+    <script>
+            $(document).ready(function() {
+                $('.zoom').hover(
+                    function() {
+                        $(this).closest('.card').css('transition', 'transform 0.5s ease');
+                        $(this).closest('.card').css('transform', 'scale(1.1) translateY(20px)');
+                    },
+                    function() {
+                        $(this).closest('.card').css('transition', 'transform 0.5s ease');
+                        $(this).closest('.card').css('transform', 'scale(1) translateY(0)');
+                    }
+                );
+            });
+    </script>
 {% endblock content %}
